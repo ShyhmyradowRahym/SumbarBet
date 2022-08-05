@@ -9,6 +9,8 @@ import Footer from './Components/Footer';
 
 import { Suspense, lazy } from 'react';
 import Loading from './Components/Loading/Loading';
+import PWA from './Components/PWA/PWA';
+import Scroll from './Components/PWA/Scroll';
 
 
 const Home = lazy(() => import('./Pages/Home'))
@@ -37,7 +39,8 @@ const Nav = lazy(() => import('./Components/Nav'))
 function App() {
   return (
     <div className='flex flex-col'>
-      <ScrollToTop style={{ zIndex: '100', marginBottom: '25px' }} smooth component={<TiArrowUp className='text-3xl' />} color="#6f00ff" />
+      <Scroll />
+      <PWA />
       <Header />
       <div className='flex md:flex-row flex-col md:mx-5 mx-0'>
         <Suspense fallback={<Loading />}>

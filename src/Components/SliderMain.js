@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from 'axios'
+import { Link } from 'react-router-dom';
 function SliderMain() {
     const settings = {
         arrows: false,
@@ -26,11 +27,12 @@ function SliderMain() {
         }
         getData()
     }, [])
+    console.log(data);
     return (
         <div className='w-full border-box' style={{ zIndex: '-9999' }}>
             <Slider {...settings}>
                 {data && data.map((e,k) => (
-                    <img key={k} src={e} className='w-full h-48 md:h-auto cursor-pointer' />
+                    <Link to={`/product/${e.id}`}><img key={k} src={e} className='w-full h-48 md:h-auto cursor-pointer' /></Link>
                 ))}
             </Slider>
         </div>

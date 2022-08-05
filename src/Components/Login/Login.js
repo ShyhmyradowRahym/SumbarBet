@@ -17,18 +17,26 @@ const Login = ({ setHasabymModal, SetSignShow }) => {
         // setHasabymModal(false)
         axios.post('http://95.85.127.250:3001', { 'phone': phone })
             .then(res => {
-                console.log('phone ugradyldy');
+                console.log(res.data);
                 if (res.status === 201) {
-                    setSmsShow(true)
-                    setError(null)
-                    setKod(true)
-                    setPhoneShow(false)
+                    axios.post('http://192.168.31.202:3003', { 'phone': phone, 'password':res.data.toString() })
+                        .then(res => {
+                            console.log('phone ugradyldy');
+                            if (res.status === 200) {
+                                setSmsShow(true)
+                                setError(null)
+                                setKod(true)
+                                setPhoneShow(false)
+                            }
+                        }).catch(err => {
+                            setError(err.response.data.message)
+                        })
                 }
             }).catch(err => {
                 setError(err.response.data.message)
             }
             )
-    } 
+    }
     const handleSms = () => {
         axios.post('http://95.85.127.250:3001/confirm', { 'phone': phone, 'password': sms })
             .then(res => {
@@ -55,7 +63,7 @@ const Login = ({ setHasabymModal, SetSignShow }) => {
             )
     }
     return (
-        <div id="popup-modal" tabindex="-1" class="bg-opacity-30 bg-black flex items-center justify-center overflow-y-hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal h-full">
+        <div className="login bg-opacity-30 bg-black flex items-center justify-center overflow-y-hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal h-full">
             <div
                 data-aos="fade-down"
                 className="relative p-4 w-full max-w-md h-auto">

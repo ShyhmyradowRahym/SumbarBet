@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { BsSearch } from 'react-icons/bs'
+import { useSelector } from 'react-redux';
 import service from '../../Components/Interceptors/axios';
 
 const OrdersHistory = () => {
@@ -15,7 +16,10 @@ const OrdersHistory = () => {
         }
         getData()
     }, [])
-    console.log(data);
+    const profileShow = useSelector(state => state.profileShow.profileShow)
+    useEffect(()=>{
+        !profileShow && window.location.replace('/')
+    },[])
     return (
         <div className='md:w-3/4 px-3 md:px-0 md:mt-5 mt-0 w-full flex flex-col'>
             <h1 className='mb-4 sm:mt-0 mt-5 text-center text-2xl font-bold'>SARGYTLARYŇ TARYHY</h1>

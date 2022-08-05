@@ -4,7 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { AiFillCaretRight } from 'react-icons/ai'
 import * as yup from 'yup';
 import axios from 'axios'
-// import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function NagilelikModal({ setNagilelikModal }) {
 
     const schema = yup.object().shape({
@@ -15,22 +16,22 @@ function NagilelikModal({ setNagilelikModal }) {
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
-    // const notify = () => toast.success('Hatyňyz kabul edildi...', {
-    //     position: "bottom-left",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    // });
+    const notify = () => toast.success('Hatyňyz kabul edildi...', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
     const handleNagilelik = (data) => {
-        axios.post(`/report`, { "username":data.username, "emailOrPhone":data.emailOrPhone, "message":data.message })
+        axios.post(`/report`, { "username": data.username, "emailOrPhone": data.emailOrPhone, "message": data.message })
             .then(res => {
-                if (res.status===201){
+                if (res.status === 201) {
                     setNagilelikModal(false)
-                    // notify()
-                    alert('Hatynyz iberildi...')
+                    notify()
+
                 }
             }).catch(err => {
                 console.log(err);
@@ -42,6 +43,7 @@ function NagilelikModal({ setNagilelikModal }) {
             <div
                 data-aos="fade-down"
                 class="relative p-4 w-full max-w-lg h-auto">
+                <ToastContainer />
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <form onSubmit={handleSubmit(data => handleNagilelik(data))}>
                         <div className='border-b py-5 flex justify-between px-5 items-center'>

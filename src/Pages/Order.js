@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { welayatlar } from '../Components/welayatlar'
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AiFillCaretRight } from 'react-icons/ai'
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import service from '../Components/Interceptors/axios';
 import { emptyCart } from '../Features/cartSlice';
 function Order() {
@@ -27,7 +27,6 @@ function Order() {
     })
     const dispatch=useDispatch()
     const handleOrder = (data) => {
-        console.log(data, ' ', idS, ' ', t);
         async function getData() {
             try {
                 const res = await service.post('/product/buy',{'ids':idS, 'phone':data.tel, 'total':t, 'payment':t, 'status':null});
@@ -45,8 +44,6 @@ function Order() {
     let [searchParams, setSearchParams] = useSearchParams();
     const [data, setData] = useState(searchParams.get('p'))
     const [check, setCheck] = useState(searchParams.get('l'))
-    // console.log(welayatlar[data].title);
-    console.log(idS);
     return (
         <div className='w-full md:w-3/4 mt-5'>
             <div className='w-full md:w-3/5 px-2 md:px-0 md:mx-auto'>

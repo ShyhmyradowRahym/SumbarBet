@@ -20,6 +20,8 @@ import WideoKarta from './Main-Category/WideoKarta'
 import MobilPeriferiya from './Main-Category/MobilPeriferiya'
 import Gulaklyklar from './Main-Category/Gulaklyklar'
 import Kalonkalar from './Main-Category/Kalonka'
+import axios from 'axios'
+import Teswir from '../Components/Teswir'
 function Home() {
     const [menu, setMenu] = useState(0)
     useEffect(() => {
@@ -61,65 +63,7 @@ function Home() {
                 <Kalonkalar />
             </div>
             <div className='md:hidden block'>
-                <p className='md:hidden block text-center my-2 font-bold md:mr-6 mr-0'>
-                    <Link className='text-black hover:text-red-600' to='/ratings'>TESWIRLER</Link>
-                </p>
-                <div className='border md:mr-6 mr-0 bg-white pb-2'>
-                    <div className='flex items-center'>
-                        <div className='p-2 w-1/2 flex flex-col justify-center'>
-                            <p className='text-center text-red-600 font-bold text-4xl'>5.0</p>
-                            <div className='flex justify-center'>
-                                <AiFillStar className='text-yellow-500' />
-                                <AiFillStar className='text-yellow-500' />
-                                <AiFillStar className='text-yellow-500' />
-                                <AiFillStar className='text-yellow-500' />
-                                <AiFillStar className='text-yellow-500' />
-                            </div>
-                            <p className='text-center text-gray-500'>(25)</p>
-                        </div>
-                        <div className='h-20 border bg-black'></div>
-                        <div className='w-1/2 flex justify-center items-center'>
-                            <button className='py-2 px-1 text-red-600 transition duration-500 ease-in-out hover:text-white hover:bg-red-600 border border-red-600'>Baha berin</button>
-                        </div>
-                    </div>
-                    <div className=''>
-                        <div className='w-11/12 mx-auto bg-gray-300' style={{ height: '1px' }}></div>
-                        <div className='mt-2 flex pl-3 items-center'>
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <p className='text-sm ml-2'>Örän gowy</p>
-                        </div>
-                        <div className='flex items-center pl-3'>
-                            <IoPersonCircleSharp className='mr-1 text-lg text-gray-400' />
-                            <p className='text-sm font-bold'>Hezret</p>
-                        </div>
-                        <p className='pb-2 pl-3 text-sm'>Tuweleme bahalar gowy cykyar</p>
-                        <div className='w-11/12 mx-auto bg-gray-300' style={{ height: '1px' }}></div>
-                        <div className='mt-2 flex pl-3 items-center'>
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <AiFillStar className='text-yellow-500' />
-                            <p className='text-sm ml-2'>Örän gowy</p>
-                        </div>
-                        <div className='flex items-center pl-3'>
-                            <IoPersonCircleSharp className='mr-1 text-lg text-gray-400' />
-                            <p className='text-sm font-bold'>Serdar</p>
-                        </div>
-                        <p className='pl-3 text-sm'>Tuweleme !!! Juda gowy !</p>
-                        <div className='w-11/12 my-2 mx-auto bg-gray-300' style={{ height: '1px' }}></div>
-
-                        <Link to='/ratings'>
-                            <p className='mx-2 rounded text-center py-1.5 px-1 transition duration-500 ease-in-out text-white hover:bg-black bg-red-600 '>
-                                Ahli teswirler
-                            </p>
-                        </Link>
-                    </div>
-                </div>
+                <Teswir />
             </div>
         </div>
     )

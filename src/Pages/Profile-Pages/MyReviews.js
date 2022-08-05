@@ -5,6 +5,7 @@ import { IoPersonCircleSharp } from 'react-icons/io5'
 import service from '../../Components/Interceptors/axios'
 import Loading from '../../Components/Loading/Loading'
 import _ from "lodash";
+import { useSelector } from 'react-redux'
 const MyReviews = () => {
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -22,7 +23,10 @@ const MyReviews = () => {
         getData()
         setLoading(true)
     }, [])
-    console.log(data);
+    const profileShow = useSelector(state => state.profileShow.profileShow)
+    useEffect(()=>{
+        !profileShow && window.location.replace('/')
+    },[])
     return (
         <div className='md:w-3/4 px-3 md:px-0 md:mt-5 mt-0 w-full flex flex-col'>
             <h1 className='mb-4 sm:mt-0 mt-5 text-center text-2xl font-bold'>TESWIRLERIM</h1>

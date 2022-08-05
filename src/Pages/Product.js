@@ -22,6 +22,10 @@ import { addCart } from '../Features/cartSlice';
 import { BiPlay } from 'react-icons/bi';
 import service from '../Components/Interceptors/axios';
 import Login from '../Components/Login/Login';
+import BahaModal from '../Components/BahaBermek/BahaModal';
+import Menzeshler from './product/Menzeshler';
+import NewTab from './main-page/NewTab'
+import PopularTab from './main-page/PopularTab'
 function Product() {
     let [searchParams, setSearchParams] = useSearchParams();
     const { id } = useParams()
@@ -35,7 +39,6 @@ function Product() {
         autoplay: true,
         autoplaySpeed: 3500,
     };
-    const [menu, setMenu] = useState(0)
     const schema = yup.object().shape({
         teswir: yup.string().min(3, "minimum 3 simbol bolmaly").required('meydany doldur'),
     });
@@ -54,12 +57,10 @@ function Product() {
             }
         }
         getData()
-    }, [])
-    const [copyText, setCopyText] = useState(data && data.model);
-    console.log(data);
-    const copyToClipboard = () => {
-        copy(copyText);
-        alert(`You have copied "${copyText}"`);
+    }, [id])
+    const copyToClipboard = (data) => {
+        copy(data);
+        alert(`You have copied "${data}"`);
     }
     const cartProducts = useSelector(state => state.cart.cartProducts)
     const dispatch = useDispatch()
@@ -96,7 +97,6 @@ function Product() {
         }
         getData()
     }, [like, hasabymModal])
-    console.log(favProducts);
     const [check, setCheck] = useState(false)
     useEffect(() => {
         const existItem = favProducts && favProducts.find(x => data && x.id == data.id)
@@ -131,7 +131,7 @@ function Product() {
         async function getData() {
             try {
                 const res = await service.post('/product/review', { "text": d.teswir, "product": data.id, "stars": rating });
-                if (res.status===201){
+                if (res.status === 201) {
                     alert('ugradyldy')
                 }
             } catch (error) {
@@ -140,6 +140,8 @@ function Product() {
         }
         getData()
     }
+    const [menu, setMenu] = useState(0)
+    const [showBaha, setShowBaha] = useState(false)
     return (
         <div className='w-full md:w-3/4 mt-5'>
             <div className='flex md:flex-row flex-col'>
@@ -148,10 +150,12 @@ function Product() {
                         <Login setHasabymModal={setHasabymModal} />
                     </div>
                 }
+                {
+                    !profileShow && showBaha && <BahaModal setShowBaha={setShowBaha} />
+                }
                 <div className='md:w-2/5 px-3 md:px-0 w-full'>
-                    <div className='p-2 bg-white border w-full border-box' style={{ zIndex: '-9999' }}>
-                        {/* <LightgalleryProvider> */}
-                        <Slider {...settings}>
+                    <div className='p-2 border w-full border-box'>
+                        <Slider {...settings} style={!profileShow && hasabymModal ? { zIndex: '-9999' } :{zIndex:'1'}}>
                             {
                                 data && data.imageUrl.map(e => (
                                     <img src={e} className='w-full h-68 md:h-80 cursor-pointer' />
@@ -159,7 +163,6 @@ function Product() {
                             }
 
                         </Slider>
-                        {/* </LightgalleryProvider> */}
                     </div>
                     <ul className='flex mt-2'>
                         <LightgalleryProvider>
@@ -194,7 +197,7 @@ function Product() {
                         <div className='flex'>
                             {data && <p className='cursor-pointer text-sm py-1 px-3 hover:border-red-600 border border-gray-600'>{data.model}</p>}
                             <Tooltip message={'Göçüriň'}>
-                                <IoIosCopy onClick={copyToClipboard} className='transition duration-500 ease-in-out text-3xl p-1 text-blue-600 hover:text-white hover:bg-blue-600 cursor-pointer border border-blue-500' />
+                                <IoIosCopy onClick={() => copyToClipboard(data.model)} className='transition duration-500 ease-in-out text-3xl p-1 text-blue-600 hover:text-white hover:bg-blue-600 cursor-pointer border border-blue-500' />
                             </Tooltip>
                             <Tooltip message={'Google-da gözläň'}>
                                 <IoLogoGoogle className='transition duration-500 ease-in-out text-3xl p-1 cursor-pointer text-red-600 hover:text-white hover:bg-red-600 border border-red-600' />
@@ -224,12 +227,12 @@ function Product() {
                 <ul className='flex justify-center flex-wrap'>
                     <li onClick={() => setMenu(0)} className={menu === 0 ? 'border-b-2 border-red-600 mx-4 font-bold text-lg text-red-600' : 'cursor-pointer mx-4 font-bold text-lg'}>ÄHLI AÝRATYNLYKLAR</li>
                     <li onClick={() => setMenu(1)} className={menu === 1 ? 'border-b-2 border-red-600 mx-4 font-bold text-lg text-red-600' : 'cursor-pointer mx-4 font-bold text-lg'}>DÜŞÜNDIRIŞ</li>
-                    <li onClick={() => setMenu(2)} className={menu === 2 ? 'border-b-2 border-red-600 mx-4 font-bold text-lg text-red-600' : 'cursor-pointer mx-4 font-bold text-lg'}>TESWIRLER</li>
+                    <li onClick={() => { setMenu(2); setShowBaha(true) }} className={menu === 2 ? 'border-b-2 border-red-600 mx-4 font-bold text-lg text-red-600' : 'cursor-pointer mx-4 font-bold text-lg'}>TESWIRLER</li>
                 </ul>
                 {
                     menu === 0 && data &&
                     <div className="w-full px-3 md:px-0 text-sm mt-8 text-gray-500">
-                        {data &&
+                        {data.allSpecifications ?
                             Object.keys(data.allSpecifications.specification).map((e, k) => (
                                 <div className='flex flex-col'>
                                     <div className={k % 2 == 1 ? 'border flex bg-white' : 'border flex bg-gray-200'}>
@@ -241,17 +244,17 @@ function Product() {
                                         </div>
                                     </div>
                                 </div>
-                            ))
+                            )):<p>''</p>
                         }
                     </div>
                 }
                 {
                     menu === 1 &&
                     <div className='px-2 py-6 pb-10 border bg-white mt-8'>
-                        {data && <p>{data.description.desc}</p>}
+                        {data.description ? <p>{data.description.desc}</p> : <p></p>}
                     </div>
                 }
-                {menu === 2 &&
+                {profileShow && menu === 2 &&
                     <div className='mt-8 bg-white border flex flex-col justify-center items-center'>
                         <div className='my-4'><SampleRating rating={rating} setRating={setRating} /></div>
                         <form className='lg:w-1/2 md:w-2/3 w-full px-4' onSubmit={handleSubmit(data => handleTeswir(data))}>
@@ -275,6 +278,11 @@ function Product() {
                     </div>
                 }
             </div>
+            <Menzeshler id={id && id} cat={data && data.category.id} subCat={data && data.subCategory!=null && data.subCategory.id} title={data && data.category.title} />
+            <Link to='/all'><p className='mb-2 mt-2 md:mt-10 text-center text-2xl font-bold'>TÄZELER</p></Link>
+            <NewTab />
+            <Link to='/all?popular=true'><p className='mb-2 mt-2 md:mt-10 text-center text-2xl font-bold'>MEŞHURLAR</p></Link>
+            <PopularTab />
         </div >
     )
 }

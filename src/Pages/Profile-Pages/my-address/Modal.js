@@ -11,11 +11,13 @@ const Modal = ({ setShowModal }) => {
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
+    
     const handleModal = (data) => {
         async function getData() {
             try {
                 const response = await service.post('/users/address', { 'address': data.text })
-                if(response.status===201){
+                if (response.status === 201) {
+                    
                     setShowModal(false)
                 }
             } catch (error) {

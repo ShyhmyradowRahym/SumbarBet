@@ -8,6 +8,7 @@ import Products from '../Products'
 import axios from 'axios'
 import { BsSearch } from 'react-icons/bs'
 import service from '../../Components/Interceptors/axios';
+import { useSelector } from 'react-redux';
 function Favorites() {
     const [filter, setFilter] = useState('Elipbiy boyunca')
     const [show, setShow] = useState(false)
@@ -38,7 +39,10 @@ function Favorites() {
         }
         getData()
     }, [])
-    console.log(data);
+    const profileShow = useSelector(state => state.profileShow.profileShow)
+    useEffect(()=>{
+        !profileShow && window.location.replace('/')
+    },[])
     return (
         <div className='md:w-3/4  w-full md:mt-5 mt-0'>
             <h1 className='mb-4 sm:mt-0 mt-5 text-center text-2xl font-bold'>HALAÝANLARYM</h1>

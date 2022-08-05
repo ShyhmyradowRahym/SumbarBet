@@ -10,6 +10,8 @@ import { BsSearch } from 'react-icons/bs'
 import { welayatlar } from '../Components/welayatlar'
 import AOS from 'aos';
 import "aos/dist/aos.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Corzina() {
     let { title } = useParams()
     const cartProducts = useSelector(state => state.cart.cartProducts)
@@ -30,11 +32,31 @@ function Corzina() {
     useEffect(() => {
         data == 0 && setCheck(0)
     }, [data])
-    console.log(cartProducts);
+    const add = () => toast.success('haryt goşuldy', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+    
+    const del = () => toast.error('haryt ayryldy', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
+
     return (
         <div
             data-aos="fade"
             className='md:w-3/4 w-full mt-5'>
+                <ToastContainer />
             <h1 className='mb-4 sm:mt-0 mt-5 text-center text-2xl font-bold'>SEBEDIM</h1>
             <div className='hidden md:flex items-center w-full h-16 border-2 bg-white'>
                 <div className='w-3/4 flex items-center'>
@@ -59,12 +81,12 @@ function Corzina() {
                         </div>
                         <div className='w-2/4 flex items-center justify-between pr-3'>
                             <div className='flex md:flex-row flex-col items-center'>
-                                <HiMinusSm onClick={() => dispatch(addCart({ quantity: e.quantity > 1 && e.quantity - 1, product: e.product }))} className='bg-gray-200 text-lg md:text-2xl p-0.5 text-gray-400 cursor-pointer' />
+                                <HiMinusSm onClick={() => {dispatch(addCart({ quantity: e.quantity > 1 && e.quantity - 1, product: e.product })); del()}} className='bg-gray-200 text-lg md:text-2xl p-0.5 text-gray-400 cursor-pointer' />
                                 {e.quantity == 0 ? <p className='mx-2 text-red-400 font-bold'>0</p> : <p className='md:mx-2 text-red-400 font-bold'>{e.quantity}</p>}
-                                <AiOutlinePlus onClick={() => dispatch(addCart({ quantity: e.quantity + 1, product: e.product }))} className='bg-gray-200 text-gray-400 p-0.5 text-lg md:text-2xl cursor-pointer' />
+                                <AiOutlinePlus onClick={() => {dispatch(addCart({ quantity: e.quantity + 1, product: e.product })); add()}} className='bg-gray-200 text-gray-400 p-0.5 text-lg md:text-2xl cursor-pointer' />
                             </div>
                             <p className='md:text-md text-sm'>{e.quantity * e.product.price} {' '} TMT</p>
-                            <RiCloseLine onClick={() => dispatch(delItemToCart(e.product.id))} className='bg-gray-200 text-gray-400 text-xl md:text-xl cursor-pointer' />
+                            <RiCloseLine onClick={() => {dispatch(delItemToCart(e.product.id)); del()}} className='bg-gray-200 text-gray-400 text-xl md:text-xl cursor-pointer' />
                         </div>
                     </div>
                 ))

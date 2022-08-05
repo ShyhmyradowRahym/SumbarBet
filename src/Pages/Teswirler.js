@@ -6,6 +6,10 @@ import axios from 'axios'
 import _ from "lodash";
 import Loading from '../Components/Loading/Loading'
 import service from '../Components/Interceptors/axios'
+import BahaModal from '../Components/BahaBermek/BahaModal'
+import Modal from '../Components/BahaBermek/Modal'
+import { useSelector } from 'react-redux'
+import Rating from '../Components/Rating/Rating'
 function Teswirler() {
   const [data, setData] = useState(null)
   const [likes, setLikes] = useState(false)
@@ -56,27 +60,36 @@ function Teswirler() {
       }
       )
   }, [likes])
-  console.log(data);
+  const [showBaha, setShowBaha] = useState(false)
+  const profileShow = useSelector(state => state.profileShow.profileShow)
+  const handleBaha = () => {
+    setShowBaha(true)
+  }
   return (
     <div className='md:w-3/4 px-3 md:px-0 w-full my-5'>
       <h1 className='mb-4 sm:mt-0 mt-5 text-center text-2xl font-bold'>TESWIRLER</h1>
+      {
+        !profileShow && showBaha && <BahaModal setShowBaha={setShowBaha} />
+      }
+      {
+        profileShow && showBaha && <Modal setShowBaha={setShowBaha} />
+      }
       <div className='border bg-white w-full'>
 
         <div className='my-2 flex h-20 items-center'>
           <div className='p-2 w-1/2 flex flex-col justify-center'>
             <p className='text-center text-red-600 font-bold text-4xl'>{data && data[2]}</p>
             <div className='flex justify-center'>
-              <AiFillStar className='text-yellow-500' />
-              <AiFillStar className='text-yellow-500' />
-              <AiFillStar className='text-yellow-500' />
-              <AiFillStar className='text-yellow-500' />
-              <AiFillStar className='text-yellow-500' />
+              {/* {_.times(bitinBolegi, (i) => (
+              <AiFillStar key={i} className='text-yellow-500' />
+              ))} */}
+              <Rating widthRating={data && (data[2]*100)/5}/>
             </div>
             <p className='text-center text-gray-500'>({data && data[0].length})</p>
           </div>
           <div className='h-20 border bg-black'></div>
           <div className='w-1/2 flex justify-center items-center'>
-            <button className='py-2 px-1 text-red-600 transition duration-500 ease-in-out hover:text-white hover:bg-red-600 border border-red-600'>Baha berin</button>
+            <button onClick={() => handleBaha()} className='py-2 px-1 text-red-600 transition duration-500 ease-in-out hover:text-white hover:bg-red-600 border border-red-600'>Baha berin</button>
           </div>
         </div>
         <div className=''>

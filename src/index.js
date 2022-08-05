@@ -8,6 +8,8 @@ import store, { persistor } from './store';
 import { PersistGate } from 'redux-persist/integration/react';
 import "lightgallery.js/dist/css/lightgallery.css";
 import axios from 'axios'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import reportWebVitals from './reportWebVitals';
 axios.defaults.baseURL = 'http://95.85.127.250:3002'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -21,3 +23,5 @@ root.render(
     </Provider>
   </React.StrictMode>
 )
+serviceWorkerRegistration.register();
+reportWebVitals();

@@ -10,12 +10,9 @@ import { addCart } from '../Features/cartSlice'
 import { Link } from 'react-router-dom'
 import { addEqual, delItemToEqual } from '../Features/equalSlice'
 import { LightgalleryProvider, LightgalleryItem, useLightgallery } from "react-lightgallery";
-import axios from 'axios'
 import Login from '../Components/Login/Login'
 import service from '../Components/Interceptors/axios';
-
-
-function Products({ e }) {
+function Products({ e , setHasabymModal}) {
     const [show, setShow] = useState(true)
     useEffect(() => {
         AOS.init({
@@ -55,7 +52,6 @@ function Products({ e }) {
         const existItem = favProducts && favProducts.find(x => x.id === e.id)
         setCheck(existItem)
     }, [favProducts])
-    const [hasabymModal, setHasabymModal] = useState(false)
     const handleHeart = () => {
         setHasabymModal(true)
         if (!check) {
@@ -98,7 +94,7 @@ function Products({ e }) {
         } else {
             dispatch(delItemToEqual({ e }))
         }
-        if (equalProducts.length == 4) {
+        if (equalProducts.length === 4) {
             setEqual(false)
         }
     }
@@ -106,7 +102,7 @@ function Products({ e }) {
     const PhotoItem = ({ image, thumb, group }) => (
         <div style={{ maxWidth: "250px", width: "200px", padding: "5px" }}>
             <LightgalleryItem group={group} src={image} thumb={thumb}>
-                <img src={image} style={{ width: "100%" }} />
+                <img alt={image} src={image} style={{ width: "100%" }} />
             </LightgalleryItem>
         </div>
     );
@@ -118,14 +114,8 @@ function Products({ e }) {
             </button>
         );
     };
-    const profileShow = useSelector(state => state.profileShow.profileShow)
     return (
-        <div data-aos='fade' className='relative m-0 border-2 p-1'>
-            {
-                !profileShow && hasabymModal && <div className='fixed' style={{height:'100vh', width:'100vw'}}>
-                    <Login setHasabymModal={setHasabymModal} />
-                </div>
-            }
+        <div data-aos='fade' className='m-0 border-2 p-1'>
             <div className='flex items-center justify-end'>
                 <div className='flex items-center md:border-2 rounded-md px-1 cursor-pointer'>
                     <input className='md:mr-1 cursor-pointer' id={e.title} name={e.title} onChange={() => handleEqual()} checked={equal} type={'checkbox'} />
@@ -156,7 +146,7 @@ function Products({ e }) {
                         behavior: 'smooth',
                     })
                 }}>
-                    {e.imageUrl && <img src={!open ? `${e.imageUrl[0]}` : `${e.imageUrl[1] ? e.imageUrl[1] : e.imageUrl[0]}`} />}
+                    {e.imageUrl && <img alt={e.imageUrl[0]} src={!open ? `${e.imageUrl[0]}` : `${e.imageUrl[1] ? e.imageUrl[1] : e.imageUrl[0]}`} />}
                 </Link>
             </div>
             <div className='flex flex-col items-center'>

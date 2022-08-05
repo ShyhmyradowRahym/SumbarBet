@@ -10,7 +10,6 @@ import { RiSearchLine } from "react-icons/ri";
 import { TbMenu } from "react-icons/tb";
 import Logo from '../img/logo.svg'
 import { useSelector, useDispatch } from 'react-redux';
-import { handleNavToggle } from '../Features/NavToggleSlice';
 import { TiTimes } from "react-icons/ti";
 import { BiSearch } from 'react-icons/bi'
 import Equal from './Equal';
@@ -56,6 +55,18 @@ function Header() {
     const show = useSelector(state => state.equal.show)
     const [search, setSearch] = useState('')
     const navigate = useNavigate()
+    const [dataSearch, setDataSearch] = useState('')
+    useEffect(() => {
+        async function getData() {
+            try {
+                const response = await axios.get(`/product/search?word=${search}`);
+                setDataSearch(response.data)
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        getData()
+    }, [search])
     const handleSearch = () => {
         navigate({
             pathname: "search",
@@ -78,9 +89,9 @@ function Header() {
     const handleSearchMini = (e) => {
         navigate({
             pathname: `product/${e}`,
-            search: `?${createSearchParams({
-                q: `${search.toLocaleLowerCase()}`
-            })}`
+            // search: `?${createSearchParams({
+            //     q: `${search.toLocaleLowerCase()}`
+            // })}`
         });
         setSearch('')
     }
@@ -115,8 +126,6 @@ function Header() {
     }, [showMenu])
     const dispatch = useDispatch()
     const [profilListShow, setProfilListShow] = useState(false)
-    const loginShow = useSelector(state => state.loginShow.loginShow)
-    const signShow = useSelector(state => state.signShow.signShow)
     const profileShow = useSelector(state => state.profileShow.profileShow)
     const [logged, setLogged] = useState(profileShow)
     const [category, setCategory] = useState(null)
@@ -132,9 +141,9 @@ function Header() {
         }
         getData()
     }, [])
-    useEffect(() => {
-        setLogged(profileShow)
-    }, [hasabymModal, SignShow, profilListShow, logged])
+    const handleLogOut=()=>{
+        window.location.reload(); setProfilListShow(false); dispatch(handleProfileShow(false)); setLogged(false); localStorage.clear()
+    }
     return (
         <div className='bg-black text-gray-400'>
             <nav className={`md:mx-5 mx-0 h-10 flex justify-between items-center`}>
@@ -189,14 +198,15 @@ function Header() {
                         </div>
                         {search && <div className='absolute z-20 w-full rounded bg-white'>
                             <ol>
-                                {_.times(7, (i) => (
-                                    <li onClick={() => handleSearchMini(data[i].link)} key={i} className='cursor-pointer h-16 border-b flex items-center px-2'>
-                                        <img src={data[i].img} className='h-12 mr-3' />
-                                        <p>{data[i].title}</p>
+                                {dataSearch && dataSearch.map((i,k) => (
+                                    <li key={k} onClick={() => handleSearchMini(i.id)} className='hover:bg-gray-50 cursor-pointer h-20 border-b flex items-center px-2'>
+                                        <img src={i.imageUrl[0]} className='h-12 mr-3' />
+                                        <p className='text-md text-gray-700'>{i.title}</p>
                                     </li>
                                 ))}
+                                {dataSearch && dataSearch.length===0 && <p className='py-3 px-3 border text-black bg-white'>Haryt tapylmady</p>}
                             </ol>
-                            <p className='rounded-b cursor-pointer py-1 bg-gray-300 text-gray-600 text-center'>Hemme netijeler</p>
+                            {dataSearch && dataSearch.length>0 && <p className='rounded-b cursor-pointer py-1 bg-gray-300 text-gray-600 text-center'>Hemme netijeler</p>}
                         </div>}
                     </div>
                     <div className='flex items-center'>
@@ -204,14 +214,13 @@ function Header() {
                             <RiSearchLine />
                         </div>
                         <div className="relative cursor-pointer md:p-0">
-                            {!logged ? <div onClick={() => SetHasabymShow(!hasabymShow)} className='relative'>
+                            {!profileShow ? <div onClick={() => SetHasabymShow(!hasabymShow)} className='relative'>
                                 <IoPersonCircleSharp className='md:p-0 md:w-auto text-2xl md:text-3xl text-white' />
                                 <RiCloseFill className="absolute top-0 left-3 md:left-4 bg-red-500 rounded-full text-white text-sm" />
                             </div> :
                                 <div onClick={() => setProfilListShow(!profilListShow)} className='relative flex items-center'>
                                     <IoPersonCircleSharp className='md:p-0 md:w-auto text-2xl md:text-3xl text-white' />
                                     <RiCheckLine className="absolute top-0 left-3 md:left-4 bg-green-500 rounded-full text-white text-sm" />
-                                    {/* <p className='text-white text-md bottom-0 ml-0.5'>Rahym</p> */}
                                 </div>}
                             {hasabymShow && <p onClick={() => { setHasabymModal(true); SetHasabymShow(!hasabymShow) }} className='absolute mt-0.5 text-black rounded divide-y divide-gray-100 w-36 py-2 text-sm px-1 text-center bg-white z-20 right-0'>Hasabyma gir</p>}
                             {profilListShow && <ul>
@@ -232,7 +241,7 @@ function Header() {
                                         <li onClick={() => setProfilListShow(false)}>
                                             <Link to='/profile-edit' className="cursor-pointer block py-1 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profilimi üýtgetmek</Link>
                                         </li>
-                                        <li onClick={() => { window.location.reload(); setProfilListShow(false); dispatch(handleProfileShow(false)); setLogged(false); localStorage.clear() }}>
+                                        <li onClick={() => handleLogOut()}>
                                             <p className="cursor-pointer block py-1 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Hasabymdan çyk</p>
                                         </li>
                                     </ul>

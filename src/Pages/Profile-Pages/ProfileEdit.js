@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import service from '../../Components/Interceptors/axios';
+import { useSelector } from 'react-redux';
 const ProfileEdit = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -13,13 +14,13 @@ const ProfileEdit = () => {
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
-    const [user, setUser]=useState(null)
+    const [user, setUser] = useState(null)
     useEffect(() => {
         async function getData() {
             try {
                 const res = await service.get('/users')
                 setUser(res.data)
-                if (res.status===200){
+                if (res.status === 200) {
                     setName(res.data.name)
                     setEmail(res.data.email)
                 }
@@ -29,18 +30,23 @@ const ProfileEdit = () => {
         }
         getData()
     }, [])
-    console.log(user);
     const handleModal = (data) => {
         async function getData() {
             try {
                 const res = await service.post('/users/edit', { "name": data.name, "email": data.email })
-                console.log(res);
+                if (res.status === 201) {
+                    alert('profil uytgedildi')
+                }
             } catch (error) {
                 console.error(error);
             }
         }
         getData()
     }
+    const profileShow = useSelector(state => state.profileShow.profileShow)
+    useEffect(()=>{
+        !profileShow && window.location.replace('/')
+    },[])
     return (
         <div className='md:w-3/4 px-3 md:px-0 md:mt-5 mt-0 w-full flex flex-col'>
             <h1 className='mb-4 sm:mt-0 mt-5 text-center text-2xl font-bold'>PROFILIMI ÜÝTGETMEK</h1>

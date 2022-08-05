@@ -9,7 +9,7 @@ export const ProfileShowSlice = createSlice({
     initialState,
     reducers: {
         handleProfileShow: (state, action) => {
-            state. profileShow = action.payload
+            state.profileShow = action.payload
         }
     }
 })
